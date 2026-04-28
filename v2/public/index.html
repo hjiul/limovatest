@@ -72,6 +72,15 @@
               {
                 type: "button",
                 disabled: Boolean(loading),
+                onClick: () => run("limokey", "/api/test-limokey"),
+              },
+              loading === "limokey" ? "Testing limokey..." : "Test limokey",
+            ),
+            React.createElement(
+              "button",
+              {
+                type: "button",
+                disabled: Boolean(loading),
                 onClick: () => run("flow 1", "/api/test-flow-1"),
               },
               loading === "flow 1" ? "Testing flow 1..." : "Test flow 1",

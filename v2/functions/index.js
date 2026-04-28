@@ -7,12 +7,28 @@ const app = express();
 
 app.use(express.json());
 
-function getLimovaKeyStatus() {
+function getLimovaKey() {
   try {
-    return Boolean(limokey.value() || process.env.LIMOVA_API_KEY);
+    return limokey.value() || process.env.LIMOVA_API_KEY || "";
   } catch {
-    return Boolean(process.env.LIMOVA_API_KEY);
+    return process.env.LIMOVA_API_KEY || "";
   }
+}
+
+function getLimovaKeyStatus() {
+  return Boolean(getLimovaKey());
+}
+
+function maskKeyEdges(key) {
+  if (!key) {
+    return null;
+  }
+
+  return {
+    first10: key.slice(0, 10),
+    last10: key.slice(-10),
+    length: key.length,
+  };
 }
 
 app.get("/api/health", (req, res) => {
@@ -21,6 +37,19 @@ app.get("/api/health", (req, res) => {
     app: "limovatest-v2",
     limovaKeyConfigured: getLimovaKeyStatus(),
     timestamp: new Date().toISOString(),
+  });
+});
+
+app.post("/api/test-limokey", async (req, res) => {
+  const key = getLimovaKey();
+
+  res.json({
+    ok: Boolean(key),
+    message: key
+      ? "limokey is readable by the backend."
+      : "limokey is not available to the backend.",
+    limovaKeyConfigured: Boolean(key),
+    limovaKeyPreview: maskKeyEdges(key),
   });
 });
 
