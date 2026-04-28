@@ -43,9 +43,11 @@ http://localhost:5000
 Make sure you are logged in:
 
 ```bash
-firebase login
-firebase use --add
+npm run login
+npm run use
 ```
+
+These commands use `npx --package firebase-tools firebase`, so you do not need a global `firebase` command installed.
 
 Deploy both frontend and backend:
 
@@ -72,7 +74,7 @@ The backend is wired to read the Firebase secret named `limokey`.
 If the secret already exists from your App Hosting attempt, Cloud Functions can also use it through Google Secret Manager. If deploy complains that it cannot access or find it, create it with:
 
 ```bash
-firebase functions:secrets:set limokey
+npm run firebase -- functions:secrets:set limokey
 ```
 
 Then deploy functions again:
