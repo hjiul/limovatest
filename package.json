@@ -1,0 +1,19 @@
+{
+  "name": "limova-api-testbench",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Firebase-hosted React and Node test bench for Limova API experiments.",
+  "scripts": {
+    "install:all": "npm install --prefix app && npm install --prefix functions",
+    "dev:app": "npm run dev --prefix app",
+    "dev:functions": "npm run serve --prefix functions",
+    "build": "npm run build --prefix app",
+    "deploy": "firebase deploy --only hosting,functions,firestore:rules",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions",
+    "emulators": "firebase emulators:start"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
