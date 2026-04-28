@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Limova Test v2</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="module">
+      import React, {useEffect, useState} from "https://esm.sh/react@19.0.0";
+      import {createRoot} from "https://esm.sh/react-dom@19.0.0/client";
+
+      async function callApi(path) {
+        const response = await fetch(path, {method: "POST"});
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw data;
+        }
+
+        return data;
+      }
+
+      function App() {
+        const [status, setStatus] = useState("Ready");
+        const [result, setResult] = useState(null);
+        const [loading, setLoading] = useState("");
+
+        async function run(label, path) {
+          setLoading(label);
+          setStatus(`Running ${label}`);
+
+          try {
+            const data = await callApi(path);
+            setResult(data);
+            setStatus(`${label} completed`);
+          } catch (error) {
+            setResult(error);
+            setStatus(`${label} failed`);
+          } finally {
+            setLoading("");
+          }
+        }
+
+        useEffect(() => {
+          fetch("/api/health")
+            .then((response) => response.json())
+            .then((data) => setResult(data))
+            .catch((error) => setResult({error: error.message}));
+        }, []);
+
+        return React.createElement(
+          "main",
+          {className: "shell"},
+          React.createElement(
+            "header",
+            {className: "header"},
+            React.createElement("div", null,
+              React.createElement("p", {className: "eyebrow"}, "Limova API"),
+              React.createElement("h1", null, "Simple Test Panel"),
+            ),
+            React.createElement("span", {className: "status"}, status),
+          ),
+          React.createElement(
+            "section",
+            {className: "actions"},
+            React.createElement(
+              "button",
+              {
+                type: "button",
+                disabled: Boolean(loading),
+                onClick: () => run("flow 1", "/api/test-flow-1"),
+              },
+              loading === "flow 1" ? "Testing flow 1..." : "Test flow 1",
+            ),
+            React.createElement(
+              "button",
+              {
+                type: "button",
+                disabled: Boolean(loading),
+                onClick: () => run("flow 2", "/api/test-flow-2"),
+              },
+              loading === "flow 2" ? "Testing flow 2..." : "Test flow 2",
+            ),
+          ),
+          React.createElement(
+            "section",
+            {className: "output"},
+            React.createElement("h2", null, "Response"),
+            React.createElement("pre", null, JSON.stringify(result, null, 2)),
+          ),
+        );
+      }
+
+      createRoot(document.getElementById("root")).render(React.createElement(App));
+    </script>
+  </body>
+</html>

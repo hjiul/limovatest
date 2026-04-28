@@ -1,0 +1,13 @@
+{
+  "name": "limovatest-v2",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Simple Firebase Hosting and Functions test app for Limova API experiments.",
+  "scripts": {
+    "install:functions": "npm install --prefix functions",
+    "emulators": "firebase emulators:start --config firebase.json",
+    "deploy": "firebase deploy --config firebase.json --only hosting,functions",
+    "deploy:backend": "firebase deploy --config firebase.json --only functions",
+    "deploy:frontend": "firebase deploy --config firebase.json --only hosting"
+  }
+}
